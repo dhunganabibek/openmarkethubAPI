@@ -6,18 +6,30 @@ namespace openmarkethubAPI.controllers;
 [Route("api/v1/[controller]")]
 public class ProductController : ControllerBase
 {
-
-    [HttpGet()]
-    public IActionResult GetProducts()
+    private readonly IProductService _productService;
+    public ProductController(IProductService productService)
     {
-        
-        return Ok("hello from get products");
+        _productService = productService;
     }
 
-    [HttpPost()]
-    public IActionResult PostProduct()
+    [HttpGet("all-products")]
+    public async Task<IActionResult> GetAllProductsAsync(CancellationToken cancellationToken)
     {
-        
-        return Ok("hello from from post products");
+        var allProducts = await _productService.GetAllProductsAsync(cancellationToken);
+        return Ok(allProducts);
+    }
+
+    [HttpGet("product/{productId}")]
+    public async Task<IActionResult> GetProductByIdAsync(Guid productId, CancellationToken cancellationToken)
+    {
+        var product = await _productService.GetProductByIdAsync(productId, cancellationToken);
+        return Ok(product);
+    }
+
+    [HttpPost("save-or-edit-product")]
+    public async Task<IActionResult> SaveOrEditProductAsync([FromBody] ProductDTO request, CancellationToken cancellationToken)
+    {
+        await _productService.SaveOrEditProductAsync(request, cancellationToken);
+        return Ok();
     }
 }
