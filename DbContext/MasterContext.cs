@@ -6,6 +6,11 @@ public class MasterContext : DbContext
 {
     public DbSet<Product> Product { get; set; }
 
+    public MasterContext(DbContextOptions<MasterContext> options)
+        : base(options)
+    {
+    }
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
